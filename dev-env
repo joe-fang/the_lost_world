@@ -1,0 +1,91 @@
+# maintained by joe fang
+
+1. 准备工作(先搭建linux下开发环境，以64位系统为例)
+OS:		ubuntu13.04
+jdk:	jdk1.7_u25($java -version 如果没提示版本信息则说明需要安装jdk)
+
+android sdk:	adt-bundle-linux-x86_64
+android ndk:	android-ndk-r8e
+cocos2d-x:		cocos2d-x-2.1.4(我暂时用2.1.2，稍后更新)
+
+$mkdir andriod-home(以/maxwit/android-home为例)
+把android sdk, android ndk, cocos2d-x 都移至 android-home/
+
+2. 配置环境变量
+	编辑bashrc 
+	$vi ~/.bashrc
+	添加一下内容
+	export NDK_ROOT=/maxwit/android-home/android-ndk-r8e
+	保存退出
+	$source ~/.bashrc
+
+	进入cocos2d-x根目录，编辑create-android-project.sh，修改NDK_ROOT_LOCAL和
+	ANDROID_SDK_ROOT_LOCAL
+
+	NDK_ROOT_LOCAL="/maxwit/android-home/android-ndk-r8e"
+	ANDROID_SDK_ROOT_LOCAL="/maxwit/android-home/adt-bundle-linux-x86_64/sdk"
+
+3. 创建cocos2d-x项目
+	$cd /maxwit/android-home/cocos2d-x
+
+	$vi template/android/copy_files.sh
+	定位到copy_src_and_jni(){
+		...
+		cp -rf $HELLOWORLD_ROOT/proj.android/src $APP_DIR/proj.android
+	
+		#	新增一行， 否则提示找不到org.cocos2dx.lib
+		cp -rf $COCOSJAVALIB_ROOT/src $APP_DIR/proj.android
+
+		#replace Android.mk
+		...
+	}
+
+	$./create-android-project.sh
+
+出现如下文字：
+Input package path. For example: org.cocos2dx.example
+com.lostworld.example
+
+Now cocos2d-x supports Android 2.2 or upper version
+Available Android targets:
+id: 1 or "android-17"
+     Name: Android 4.2.2
+     Type: Platform
+     API level: 17
+     Revision: 2
+     Skins: HVGA, WSVGA, WXGA720, WQVGA432, WVGA854, WXGA800, WVGA800 (default), WQVGA400, QVGA, WXGA800-7in
+     ABIs : armeabi-v7a
+input target id:
+1
+input your project name:
+helloworld
+
+	这时候在cocos2d-x目录下会新建一个工程目录helloworld
+	$cd helloworld
+	$ls
+	$cd proj.Android
+	编译工程 (后面会发现这一步其实不需要)
+	$./build_native.sh
+
+4. 导入eclipse并运行
+	(如果没编辑../template/android/copy_files.sh 那就要手动复制org.cocos2dx.lib
+	cp -rf $COCOSJAVALIB_ROOT/src $APP_DIR/proj.android)
+
+	$eclipse (其实链接到了adt-bundle目录下的eclipse)
+	依次选择File-->New-->Android Project from Existing Code->Browse..
+	最后选择helloworld目录下的proj.android目录
+
+	导入之后会出现一些错误，依次将其解决。
+	如缺少drawable/icon ,那么需要在cocos2d目录下find一个drawable/icon.png复制过去
+	最难解决的一个是 no rule to make target `all
+
+	解决方法：
+	右键点最左边的Package Explorer里面的proj.android -->Properties
+	然后选择C/C++ Build-->右边Builder Settings选项卡中将Use default build command
+	勾去掉，在下面的Build command输入
+	bash ${workspace_loc:/proj.android}/build_native.sh NDK_DEBUG=1 V=1
+
+	最后Build没有Error.
+
+	^^可以将proj.andorid/bin目录下的proj.android.apk复制到手机中运行了。
+
