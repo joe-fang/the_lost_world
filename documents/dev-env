@@ -6,7 +6,8 @@ jdk:	jdk1.7_u25($java -version 如果没提示版本信息则说明需要安装j
 
 android sdk:	adt-bundle-linux-x86_64
 android ndk:	android-ndk-r8e
-cocos2d-x:		cocos2d-x-2.1.4(我暂时用2.1.2，稍后更新)
+cocos2d-x:		cocos2d-x-2.1.4
+tiled:	基于qt的地图编辑器 sudo apt-get install tiled
 
 $mkdir andriod-home(以/maxwit/android-home为例)
 把android sdk, android ndk, cocos2d-x 都移至 android-home/

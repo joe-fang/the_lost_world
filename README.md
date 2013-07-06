@@ -1,9 +1,8 @@
 the_lost_world
 ==============
+1. The first step for join in our project is building the development environment.
+	So, read documents/dev-env is a good choice.
 
-we are going to build a new world
+2. You can read documents/concept to acknowledge what the hell is 'the lost world'.
 
-Author:
-joe.fang@foxmail.com
-robin.he.ztto@gmail.com
 
