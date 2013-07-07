@@ -90,3 +90,27 @@ helloworld
 
 	^^可以将proj.andorid/bin目录下的proj.android.apk复制到手机中运行了。
 
+5. android真机调试
+	apk复制到手机这种方法十分麻烦，而且不能调试，所以我们还需要搭建调试环境。
+	但是ubuntu系统又比较特殊，还需要手动增加rules。
+
+	不连手机时
+	$lsusb
+	连上手机后
+	$lsusb
+	找到差别项，这就是手机的usb设备ID 这里是24e3:9025
+
+	然后增加rules
+	$sudo vi /etc/udev/rules.d/50-android.rules
+	SUBSYSTEM="usb",SYSFS"Google Inc"=24e3,MODE="0666"
+
+	使用cat确认一下
+	$cat /etc/udev/rules.d/50-android.rules
+
+	重启服务(adb如果没有配置环境变量，则需要输入完整adb路径)
+	$sudo service udev restart
+	$sudo adb kill-server
+	$sudo adb start-server
+
+	看看有什么设备
+	$adb devices
